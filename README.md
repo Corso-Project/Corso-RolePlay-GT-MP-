@@ -1,5 +1,4 @@
-# Corso RolePlay for GT-MP is...
-RolePlay gamemode with open source
+# Corso RolePlay for GT-MP with open source
 
 * Scripts that were used:
 	* [Custom Character Creator](https://gt-mp.net/forum/thread/1299-custom-character-creator/)
