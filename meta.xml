@@ -1,0 +1,43 @@
+<meta>
+    <info
+		name="Corso Role Play"
+		description="RP mode"
+		author="ynhhoJ"
+		version="alpha"
+		type="gamemode"
+	/>
+
+    <assembly ref="System.Data.dll"/>
+	<assembly ref="MySql.Data.dll"/>
+
+	<script src="common/event.cs" type="server" lang="csharp" />
+	<script src="common/func.cs" type="server" lang="csharp" />
+	<script src="common/textdraws.js" type="client" lang="javascript" />
+
+	<script src="player/event.cs" type="server" lang="csharp" />
+	<script src="player/func.cs" type="server" lang="csharp" />
+
+	<script src="corso.cs" type="server" lang="csharp" />
+	<script src="mysql.cs" type="server" lang="csharp" />
+
+	<script src="cmd.cs" type="server" lang="csharp" />
+
+	<script src="MoneyHUD.js" type="client" lang="javascript" />
+
+	<!-- WEB -->
+	<file src="web/jquery.js"/>
+	<!-- Register -->
+	<script src="web/register/register.js" type="client" lang="javascript" />
+	<file src="web/register/index.html"/>
+	<file src="web/register/style.css"/>
+	<!-- Login -->
+	<script src="web/login/login.js" type="client" lang="javascript" />
+	<file src="web/login/index.html"/>
+	<file src="web/login/style.css"/>
+
+	<!-- Addons -->
+		<!-- CharCreator -->
+	<script src="addons/charcreator/Main.cs" type="server" lang="csharp" />
+	<script src="addons/charcreator/CharCreator.js" type="client" lang="javascript" />
+	<assembly ref="Newtonsoft.Json.dll" />
+</meta>

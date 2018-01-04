@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css" />
+
+	<div class="cont_principal">
+		<div class="cont_centrar">
+			<div class="cont_login">
+				<form action="">
+					<div class="cont_tabs_login">
+						<ul class='ul_tabs'>
+							<li class="active">
+								<a>REGISTER</a>
+								<span class="linea_bajo_nom"></span>
+							</li>
+						</ul>
+					</div>
+					<div class="cont_text_inputs">
+						<input type="text" id="username" class="input_form_sign d_block active_inp" maxlength="24" placeholder="NAME"/>
+						<input type="password" id="password" class="input_form_sign d_block active_inp" placeholder="PASSWORD"/>
+					</div>
+					<div class="cont_btn">
+						<button onclick="user_register_js()" id="login" class="btn_sign">SIGN IN</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script src="../../web/jquery.js"></script>
+	<script>
+		function user_register_js()
+		{
+			var username = $("#username").val();
+			var password = $("#password").val();
+			resourceCall("user_register", username, password);
+		};
+	</script>
+</html>
