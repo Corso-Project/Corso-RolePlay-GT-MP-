@@ -55,6 +55,51 @@ namespace RP.cmd
             API.createVehicle(veh, new Vector3(PlayerPos.X+2, PlayerPos.Y+2, PlayerPos.Z), new Vector3(0, 0, rot.Z), 0, 0);
             API.sendChatMessageToPlayer(player, "~g~ [SPAWNED] " + model + " has spawned!");
         }
+        [Command("getweapon")]
+        public void CommandGetWeapon(Client player, string model, int ammo = 1000)
+        {
+
+            WeaponHash weapon;
+            try
+            {
+                weapon = (WeaponHash)System.Enum.Parse(typeof(WeaponHash), model);
+            }
+            catch
+            {
+                API.sendChatMessageToPlayer(player, "~r~[ERROR] Weapon with the name of " + model + " was not found!");
+                return;
+            }
+            API.givePlayerWeapon(player, weapon, ammo, true, true);
+            API.sendChatMessageToPlayer(player, "~g~ [SUCCESS] " + model + " was given to the player!");
+        }
+        [Command("weaponnames")]
+        public void CommandWeaponNames(Client player, bool randomColor = true)
+        {
+            int count = 0;
+            // Don't put more than 7 names per line, more than that some names will not appear
+            int maxNamesPerLine = 5;
+            string displayString = "";
+            List<string> rndColor = new List<string>
+            {
+                "~r~",
+                "~b~",
+                "~g~",
+                "~y~"
+            };
+            Random r = new Random();
+            foreach (string w in Enum.GetNames(typeof(WeaponHash)))
+            {
+                if (randomColor) displayString += rndColor[r.Next(0, rndColor.Count)];
+                displayString += w + " ";
+                count++;
+                if (count >= maxNamesPerLine)
+                {
+                    API.sendChatMessageToPlayer(player, displayString);
+                    displayString = "";
+                    count = 0;
+                }
+            }
+        }
 		[Command("getmoney")]
 		public void Get_Money(Client player){
 			API.sendChatMessageToPlayer(player, ""+player_function.GetMoney(player));

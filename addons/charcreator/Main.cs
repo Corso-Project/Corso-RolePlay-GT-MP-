@@ -144,7 +144,7 @@ namespace CharCreator
         public static Dictionary<NetHandle, PlayerCustomization> CustomPlayerData = new Dictionary<NetHandle, PlayerCustomization>();
 
         public static Vector3 CreatorCharPos = new Vector3(402.8664, -996.4108, -99.00027);
-        public static Vector3 CreatorPos = new Vector3(402.8664, -997.5515-2, -98.5+0.5);
+        public static Vector3 CreatorPos = new Vector3(402.8664, -997.5515, -98.5);
         public static Vector3 CameraLookAtPos = new Vector3(402.8664, -996.4108, -98.5);
         public static float FacingAngle = -185.0f;
         public static int DimensionID = 1;
@@ -453,8 +453,26 @@ namespace CharCreator
                     CustomPlayerData[player.handle].Clothes.Legs_Color = Convert.ToInt32(args[11]);
                     CustomPlayerData[player.handle].Clothes.Feet = Convert.ToInt32(args[12]);
                     CustomPlayerData[player.handle].Clothes.Feet_Color = Convert.ToInt32(args[13]);
-                    CustomPlayerData[player.handle].Clothes.Undershirt = 57;
 
+                    if(Convert.ToInt32(args[0]) == 0){
+                        CustomPlayerData[player.handle].Clothes.Undershirt = 57;
+                        switch(Convert.ToInt32(args[8])){
+                            case 1: CustomPlayerData[player.handle].Clothes.Torso = 0; break;
+                            case 12: CustomPlayerData[player.handle].Clothes.Torso = 12; break;
+                            case 13: CustomPlayerData[player.handle].Clothes.Torso = 11; break;
+                            case 57: CustomPlayerData[player.handle].Clothes.Torso = 12; break;
+                            case 171: CustomPlayerData[player.handle].Clothes.Torso = 12; break;
+                        }
+                    }else{
+                        CustomPlayerData[player.handle].Clothes.Undershirt = 6;
+                        switch(Convert.ToInt32(args[8])){
+                            case 2: CustomPlayerData[player.handle].Clothes.Torso = 2; break;
+                            case 3: CustomPlayerData[player.handle].Clothes.Torso = 3; break;
+                            case 5: CustomPlayerData[player.handle].Clothes.Torso = 4; break;
+                            case 16: CustomPlayerData[player.handle].Clothes.Torso = 12; break;
+                            case 30: CustomPlayerData[player.handle].Clothes.Torso = 2; break;
+                        }
+                    }
                     if (player.hasData("ChangedGender")) player.resetData("ChangedGender");
                     ApplyCharacter(player);
                     SaveCharacter(player);
@@ -517,12 +535,30 @@ namespace CharCreator
             }
             SendToCreator(player);
         }
-        [Command("goto")]
-        public static void CMD_Goto(Client player){
+        [Command("test")]
+        public static void CMD_Test(Client player, float x, float y, float z, float xx, float yy, float zz)
+        {
             player.dimension = DimensionID;
             player.rotation = new Vector3(0f, 0f, FacingAngle);
             player.position = CreatorCharPos;
+            /*
+                /test 0 0.5 1 0 0 1
+            */
+            player.triggerEvent("ctest", new Vector3(402.8664, -997.5515-0.5, -98.5-1), new Vector3(402.8664, -996.4108, -98.5-1), FacingAngle);
+
+            Vector3 PlayerPos = API.shared.getEntityPosition(player);
+            API.shared.sendChatMessageToPlayer(player, "X: " + PlayerPos.X + " Y: " + PlayerPos.Y + " Z: " + PlayerPos.Z);
         }
         #endregion
+
+        public static void Clothes_Top_Fix(Client player){
+        	if(CustomPlayerData[player.handle].Gender == 0){
+        		if(CustomPlayerData[player.handle].Clothes.Top == 1) player.setClothes(3,0,0);
+        		else if(CustomPlayerData[player.handle].Clothes.Top == 12) player.setClothes(3,12,0);
+        		else if(CustomPlayerData[player.handle].Clothes.Top == 13) player.setClothes(3,11,0);
+        		else if(CustomPlayerData[player.handle].Clothes.Top == 57) player.setClothes(3,12,0);
+        		else if(CustomPlayerData[player.handle].Clothes.Top == 171) player.setClothes(3,12,0);
+        	}
+        }
     }
 }

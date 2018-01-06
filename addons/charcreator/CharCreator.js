@@ -97,6 +97,7 @@ var lipstickColorItem = null;
 var chestHairColorItem = null;
 
 var creatorCamera = null;
+var secondCamera = null;
 var baseAngle = 0.0;
 
 function getRandomInt(min, max) {
@@ -587,8 +588,23 @@ API.onResourceStart.connect(function() {
 	// CLOTHES - FEET - COLOR
 	var clothes_feet_color_list = new List(String);
 	for (var i = 0; i < 6; i++) clothes_feet_color_list.Add(i.toString());
-	clothes_feet_color_Item = API.createListItem("Legs Color", "", clothes_feet_color_list, 0);
+	clothes_feet_color_Item = API.createListItem("Feet Color", "", clothes_feet_color_list, 0);
 	creatorClothesMenu.AddItem(clothes_feet_color_Item);
+
+	creatorClothesMenu.OnIndexChange.connect(function(sender, newIndex) {
+		if(newIndex <= 1){
+			creatorCamera = API.createCamera(new Vector3(402.8664, -997.5515, -98.5), new Vector3(0, 0, 0));
+			API.pointCameraAtPosition(creatorCamera,new Vector3(402.8664, -996.4108, -98.5));
+
+			API.setActiveCamera(creatorCamera);
+		}
+		else{
+			creatorCamera = API.createCamera(new Vector3(402.8664, -997.5515-0.5, -98.5-1), new Vector3(0, 0, 0));
+			API.pointCameraAtPosition(creatorCamera,new Vector3(402.8664, -996.4108, -98.5-1));
+
+			API.setActiveCamera(creatorCamera);
+		}
+	});
 
 	creatorClothesMenu.OnListChange.connect(function(menu, item, index) {
         switch (menu.CurrentSelection)
@@ -618,6 +634,12 @@ API.onResourceStart.connect(function() {
         }
 	});
 
+	creatorClothesMenu.OnMenuClose.connect(function(sender){
+		creatorCamera = API.createCamera(new Vector3(402.8664, -997.5515, -98.5), new Vector3(0, 0, 0));
+		API.pointCameraAtPosition(creatorCamera,new Vector3(402.8664, -996.4108, -98.5));
+
+		API.setActiveCamera(creatorCamera);
+	});
 	// ANGLE
 	var angle_list = new List(String);
 	for (var i = -180.0; i <= 180.0; i += 5) angle_list.Add(i.toFixed(1));
@@ -799,7 +821,16 @@ API.onServerEventTrigger.connect(function(event, args) {
 				creatorMainMenu.Visible = true;
 			}
 		break;
+        case "ctest":
+			creatorCamera = API.createCamera(new Vector3(402.8664, -997.5515-0.5, -98.5-1), new Vector3(0, 0, 0));
+			API.pointCameraAtPosition(creatorCamera,new Vector3(402.8664, -996.4108, -98.5-1));
 
+            API.setActiveCamera(creatorCamera);
+
+            baseAngle = args[2];
+
+			API.sendChatMessage("Camera X: " + API.getCameraPosition(creatorCamera).X + " Y: " + API.getCameraPosition(creatorCamera).Y + " Z: " + API.getCameraPosition(creatorCamera).Z);
+        break;
 		case "DestroyCamera":
 			API.setActiveCamera(null);
 			API.setCanOpenChat(true);
@@ -808,6 +839,7 @@ API.onServerEventTrigger.connect(function(event, args) {
 
 			for (var i = 0; i < creatorMenus.length; i++) creatorMenus[i].Visible = false;
 			creatorCamera = null;
+			secondCamera = null;
 		break;
 
 		case "UpdateCreator":
@@ -846,6 +878,7 @@ API.onServerEventTrigger.connect(function(event, args) {
 			blushColorItem.Index = data.BlushColor;
 			lipstickColorItem.Index = data.LipstickColor;
 			chestHairColorItem.Index = data.ChestHairColor;
+
 			clothes_top_Item.Index = data.Clothes.Top;
 			clothes_top_color_Item.Index = data.Clothes.Top_Color;
             clothes_legs_Item.Index = data.Clothes.Legs;
@@ -863,14 +896,37 @@ API.onResourceStop.connect(function() {
 	API.setChatVisible(true);
 
 	creatorCamera = null;
+	secondCamera = null;
 });
 
 API.onUpdate.connect(function() {
 	if (creatorCamera != null) API.disableAllControlsThisFrame();
+	if (secondCamera != null) API.disableAllControlsThisFrame();
 });
 
+/*
+var top_model = [
+	// male
+	[1,12,13,57,171],
+	// female
+	[2,3,5,16,30]
+];
+*/
 function Clothes_Top_Fix(){
-	if(top_model[currentGender][clothes_top_Item.Index] == 1 && currentGender == 0) API.setPlayerClothes(API.getLocalPlayer(),3,0,0);
-	else if(top_model[currentGender][clothes_top_Item.Index] == 13 && currentGender == 0) API.setPlayerClothes(API.getLocalPlayer(),3,11,0);
-	else if(top_model[currentGender][clothes_top_Item.Index] == 57 && currentGender == 0) API.setPlayerClothes(API.getLocalPlayer(),3,12,0);
+	switch (currentGender){
+		case 0:{
+			if(top_model[currentGender][clothes_top_Item.Index] == 1) API.setPlayerClothes(API.getLocalPlayer(),3,0,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 12) API.setPlayerClothes(API.getLocalPlayer(),3,12,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 13) API.setPlayerClothes(API.getLocalPlayer(),3,11,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 57) API.setPlayerClothes(API.getLocalPlayer(),3,12,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 171) API.setPlayerClothes(API.getLocalPlayer(),3,12,0);
+		}
+		case 1:{
+			if(top_model[currentGender][clothes_top_Item.Index] == 2) API.setPlayerClothes(API.getLocalPlayer(),3,2,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 3) API.setPlayerClothes(API.getLocalPlayer(),3,3,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 5) API.setPlayerClothes(API.getLocalPlayer(),3,4,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 16) API.setPlayerClothes(API.getLocalPlayer(),3,12,0);
+			else if(top_model[currentGender][clothes_top_Item.Index] == 30) API.setPlayerClothes(API.getLocalPlayer(),3,2,0);
+		}
+	}
 }
