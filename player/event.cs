@@ -28,9 +28,9 @@ public class player_event : Script{
 
 	public void OnPlayerFinishedDownload(Client player){
 		API.shared.setEntityTransparency(player.handle, 0);
-		if (Database.playerExists(player))
+		if(Database.playerExists(player) == true)
 			player_function.Login(player);
-		else
+		else if (Database.playerExists(player) == false)
 			player_function.Register(player);
 	}
 	public void OnPlayerConnectedHandler(Client player){

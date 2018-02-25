@@ -100,6 +100,7 @@ namespace MySQL {
 					player.setData("cash_amount", cash);
 					API.shared.triggerClientEvent(player, "UpdateMoneyHUD", Convert.ToString(cash));
 					player.freeze(false);
+                    API.shared.setEntityTransparency(player.handle, 255);
 					return true;
 				}
 			}
@@ -120,13 +121,15 @@ namespace MySQL {
 			while (Reader.Read())
 			{
 				string name = Reader.GetString("Social_ID");
-				if (name == player.name.ToString())
+                if (name == player.socialClubName.ToString())
 				{
+		            func.Debug(true, "playerExists");
 					Reader.Close();
 					connection.Close();
 					return true;
 				}
 			}
+			func.Debug(false, "playerExists");
 			connection.Close();
 			return false;
 		}
